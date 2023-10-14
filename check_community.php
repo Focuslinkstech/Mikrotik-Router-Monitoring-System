@@ -49,21 +49,22 @@
 										include('credentials.php');
 										$community = $_GET['community'];
 										$_SESSION['community'] = $community;
-										$query = "SELECT name from router where `community`='$community'";
 										$conn = new mysqli($db_host,$db_user,$db_pwd);
 										$conn->select_db('mikrotik');
 										
 										$router_table = '';
-
-
-
-										$result = $conn->query($query);
+										// CVE-2020-13118
+										// Fixing SQL-injection: https://www.php.net/manual/en/mysqli.quickstart.prepared-statements.php
+										$statment = $conn->prepare("SELECT name from router where `community`=?");
+										$statment->bind_param("s",$community);
+										$statment->execute();
+										$result = $statment->get_result();
 										$data = $result->fetch_assoc();
 										if(is_null($data)){
 											echo "<div class='panel-body'>No community yet!</div>";
 										}else{
 											foreach ($data as $key => $value) {
-												$link = "<a class='nav-item' href=http://localhost/check_router.php?router=$value&community=$community>".$value."</a>";
+												$link = "<a class='nav-item' href=http://localhost/mikmonitor/check_router.php?router=$value&community=$community>".$value."</a>";
 												$router_table .='<tr><td>'.$link.'</td></tr>';
 											}
 										echo $router_table;
