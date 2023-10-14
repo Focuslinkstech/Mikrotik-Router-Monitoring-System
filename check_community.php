@@ -64,7 +64,7 @@
 											echo "<div class='panel-body'>No community yet!</div>";
 										}else{
 											foreach ($data as $key => $value) {
-												$link = "<a class='nav-item' href=http://localhost/mikmonitor/check_router.php?router=$value&community=$community>".$value."</a>";
+												$link = "<a class='nav-item' href=http://localhost/check_router.php?router=$value&community=$community>".$value."</a>";
 												$router_table .='<tr><td>'.$link.'</td></tr>';
 											}
 										echo $router_table;
